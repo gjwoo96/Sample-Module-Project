@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+</head>
+<body>
+    <div>
+        <div>
+            <form id="login-form" action="/login/proc" method="post">
+                <input type="text" name="loginId">
+                <input type="password" name="password">
+            </form>
+        </div>
+        <button type="button" id="login-btn">login</button>
+    </div>
+</body>
+<script type="text/javascript">
+
+    var aesKey = "sdk3FVk239fjkFeH34k6H39fjFvj323j";
+
+    function aes256Encode(data){
+        const cipher = CryptoJS.AES.encrypt(data, CryptoJS.enc.Utf8.parse(aesKey), {
+            iv: CryptoJS.enc.Utf8.parse(aesKey.substr(0,16)),
+            padding: CryptoJS.pad.Pkcs7,
+            mode: CryptoJS.mode.CBC
+        });
+        return cipher.toString();
+    }
+
+    $(function(){
+        $("#login-btn").click(function(){
+            var password = $("input[name='password']").val();
+            var encodePassword = aes256Encode(password);
+            $("input[name='password']").val(encodePassword);
+            $("#login-form").submit();
+        })
+    })
+
+</script>
+</html>
